@@ -1,0 +1,205 @@
+<odoo>
+
+    <record id="view_tree_checkout" model="ir.ui.view">
+        <field name="name">Checkout Tree</field>
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+
+            <tree decoration-muted="state in ['done', 'cancel']" decoration-bf="state=='open'">
+                <header>
+                    <button type="action" name="%(action_checkout_message)d" string="Send Messages"/>
+                </header>
+                <field name="state" invisible="True"/>
+                <field name="name"/>
+                <field name="request_date"/>
+                <field name="want_to_borrow_for_days" string="Expected To Return"/>
+                <field name="close_date" string="Returned On"/>
+                <field name="member_id"/>
+                <field name="stage_id"/>
+                <field name="price_adjusted_after_discount" string="Total Price"/>
+                <field name="total_borrowed_books" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_form_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+
+
+                    <field name="state" invisible="True"/>
+
+                    <field name="stage_id"
+                           widget="statusbar"
+                           options="{'clickable': True, 'fold_field': 'fold'}"/>
+                </header>
+
+                <sheet>
+                    <div class="ribbon ribbon-top-right" attrs="{'invisible': [('stage_name', '!=', 'Paid')]}">
+                        <span class="bg-success">Paid</span>
+                    </div>
+                    <div name="button_box" class="oe_button_box me-5">
+                        <button type="object"
+                                name="action_buy_credits"
+                                class="oe_stat_button"
+                                icon="fa-book"
+                                domain="[('member_id', '=', member_id)]"
+                                context="{'default_member_id': member_id}"
+                        >
+                            <field name="count_checkouts"
+                                   string="Checkouts"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="stage_name" invisible="True"/>
+                    <field name="member_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="True"/>
+                        </h1>
+                    </div>
+
+
+                    <group name="group_top" class="p-4">
+                        <group name="group_left">
+                            <field name="member_id"/>
+                            <field name="request_date" readonly="1"/>
+                            <field name="want_to_borrow_for_days"/>
+                            <field name="user_id"/>
+                            <field name="close_date"/>
+
+                        </group>
+                        <group name="group_right" string="Pricing" class="shadow bg-body fw-bold ps-3 pe-5 pb-3">
+                            <field name="price" string="Total Rent/Day"/>
+                            <field name="days_borrowed" string="Days Borrowed"/>
+                            <field name="total_rent_before_discount"/>
+                            <field name="discount"/>
+                            <field name="price_adjusted_after_discount" string="Total Rent After Discount"/>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+                        <page name="page_lines" string="Borrowed Books">
+                            <field name="line_ids">
+                                <tree>
+                                    <field name="book_id"/>
+                                    <field name="borrowed_count" string="Borrowing"/>
+                                    <field name="total_price_for_current_book" string="Pricing"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field string="Select Book" name="book_id"/>
+                                        <field name="borrowed_count" string="Borrowing"/>
+                                        <field name="book_availability" string="Available in Library"/>
+                                        <field name="total_price_for_current_book" string="Total" sum="Total"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <div class="d-flex align-items-end flex-column justify-content-center">
+                                <group>
+                                    <field name="price_adjusted_after_discount" string="Total"/>
+                                </group>
+                            </div>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           widget="mail_followers"/>
+                    <field name="activity_ids"
+                           widget="mail_activity"/>
+                    <field name="message_ids"
+                           widget="mail_thread"/>
+                </div>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="view_filter_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+
+            <search>
+
+                <field name="name"/>
+                <field name="member_id"/>
+                <field name="user_id"/>
+
+                <filter name="filter_not_done"
+                        string="To Return"
+                        domain="[('state','=','open')]"/>
+                <filter name="filter_my_checkouts"
+                        string="My Checkouts"
+                        domain="[('user_id','=',uid)]"/>
+                <filter name="group_user"
+                        string="By Member"
+                        context="{'group_by': 'member_id'}"/>
+
+                <searchpanel>
+                    <field name="user_id" select="multi" enable_counters="1"/>
+                    <field name="stage_id" select="multi" enable_counters="1"/>
+                </searchpanel>
+
+            </search>
+
+        </field>
+    </record>
+
+    <record id="view_activity_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <activity string="Checkouts">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="view_calendar_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <calendar date_start="request_date"
+                      color="user_id">
+                <field name="member_id"/>
+                <field name="stage_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_pivot_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="stage_id" type="col"/>
+                <field name="member_id"/>
+                <field name="request_date" interval="week"/>
+                <field name="num_books" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_graph_checkout" model="ir.ui.view">
+        <field name="model">library.checkout</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="stage_id"/>
+                <field name="num_books" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+</odoo>

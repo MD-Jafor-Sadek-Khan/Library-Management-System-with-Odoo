@@ -1,0 +1,154 @@
+<odoo>
+    <record id="view_library_book_kanban" model="ir.ui.view">
+        <field name="name">library_book_kanban</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="name"/>
+                <field name="price"/>
+                <field name="is_available"/>
+                <field name="available_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                    <div class="img-thumbnail img-fluid">
+                                        <field name="image" widget="image"/>
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li class="fs-3 fw-bold">
+                                                Name:
+                                                <field name="name"/>
+                                            </li>
+                                            <li>
+                                                Price:
+                                                <field name="price"/>
+                                            </li>
+                                            <div class="d-flex justify-content-between px-1 py-2 align-items-center">
+                                                <li>
+                                                Available:
+                                                <field name="is_available"/>
+                                            </li>
+                                                <li>
+                                                <field name="available_count"/>
+                                                    copies
+                                            </li>
+                                            </div>
+                                        </ul>
+
+                                    </div>
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_form_book" model="ir.ui.view">
+        <field name="name">Book Form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+
+            <form>
+                <header>
+                    <button name="button_check_isbn" type="object"
+                            string="Check ISBN" class="btn btn-primary"/>
+                </header>
+                <sheet>
+                    <h2 class="d-flex justify-content-center align-items-center bg-body rounded-pill pt-3">
+                        <group col="2">
+                            <field name="name"/>
+                        </group>
+                    </h2>
+                    <group name="group_top">
+                        <group name="group_left" string="Book Details">
+                            <span colspan="2"/>
+                            <field name="isbn"/>
+                            <field name="author_ids" widget="many2many_tags"/>
+                            <field name="publisher_id"/>
+                            <field name="date_published"/>
+                            <field name="category_id"/>
+
+                        </group>
+                        <group name="group_right" string="Book Status">
+                            <span colspan="2"/>
+
+                            <field name="active"/>
+                            <field name="available_count" string="Available Copies"/>
+
+                            <label for="image"/>
+                            <label for="image" class="invisible"/>
+
+                            <field name="image" widget="image" class="rounded img-thumbnail" nolabel="1"/>
+
+
+                        </group>
+
+                    </group>
+                    <div class="border pt-5 px-2 pb-1 mt-2 border-3 border-opacity-75 border-muted rounded rounded-4">
+                        <group class="d-flex flex-column position-relative">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <h3 class="fw-bold text-decoration-underline">Pricing:</h3>
+                            </div>
+
+                        </group>
+                        <group class="d-flex justify-content-center align-items-center">
+                            <group class="shadow mb-5 rounded badge bg-primary fs-5 ms-2 ps-1 py-2 justify-content-center align-items-center text-wrap text-white d-flex">
+                                <field name="price"/>
+                                <field name="discount_per_week"/>
+
+                            </group>
+                            <group class="shadow mb-5 rounded badge bg-primary ms-2 fs-5 ps-1 py-2 justify-content-center align-items-center text-wrap text-white d-flex">
+                                <field name="discount_per_month"/>
+                                <field name="discount_per_year"/>
+
+                            </group>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="view_tree_book" model="ir.ui.view">
+        <field name="name">Book List</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="author_ids" widget="many2many_tags"/>
+                <field name="category_id"/>
+                <field name="price"/>
+                <field name="is_available"/>
+                <field name="publisher_id"/>
+                <field name="date_published"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_search_book" model="ir.ui.view">
+        <field name="name">Book Filters</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="publisher_id"/>
+                <field name="category_id"/>
+                <filter name="filter_inactive"
+                        string="Inactive"
+                        domain="[('active','=',True)]"/>
+                <filter name="filter_active"
+                        string="Active"
+                        domain="[('active','=',False)]"/>
+                <searchpanel>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-book" color="#875A7B"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,92 @@
+<odoo>
+    <record id="view_form_member" model="ir.ui.view">
+        <field name="name">Library Member Form View</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Invoice List" name="action_buy_credits" type="object"
+                            class="p-2 btn btn-sm oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="card_number"/>
+                        </group>
+                        <group>
+                            <field name="image_1920" string="User Image" widget="image"/>
+                            <field name="phone"/>
+                            <field name="card_number"/>
+                        </group>
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"
+                               widget="mail_followers"/>
+                        <field name="activity_ids"
+                               widget="mail_activity"/>
+                        <field name="message_ids"
+                               widget="mail_thread"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_library_member_kanban" model="ir.ui.view">
+        <field name="name">library_member_kanban</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="name"/>
+                <field name="card_number"/>
+                <field name="email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="img-thumbnail">
+                                    <field name="image_1920" widget="image"/>
+                                </div>
+                                <div class="d-flex justify-content-between px-1 py-2 align-items-center">
+                                    <ul>
+                                        <li class="fs-3 fw-bold">
+                                            Name:
+                                            <field name="name"/>
+                                        </li>
+                                        <li>
+                                            Card NO:
+                                            <field name="card_number"/>
+                                        </li>
+                                        <li>
+                                            Email:
+                                            <field name="email"/>
+                                        </li>
+                                    </ul>
+                                    <button string="Invoice List" name="action_buy_credits" type="object"
+                                            class="p-2 btn btn-sm oe_highlight"/>
+                                </div>
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="view_tree_member" model="ir.ui.view">
+        <field name="name">Library Member List View</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="card_number"/>
+                <button string="Invoice List" name="action_buy_credits" type="object"
+                        class="p-2 btn btn-sm oe_highlight"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

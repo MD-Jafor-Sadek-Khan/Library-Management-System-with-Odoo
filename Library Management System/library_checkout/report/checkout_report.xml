@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_library_checkout" model="ir.actions.report">
+        <field name="name">Library Checkout Report</field>
+        <field name="model">library.checkout</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">library_checkout.library_checkout_report</field>
+        <field name="report_file">library_checkout.library_checkout_report</field>
+        <field name="binding_model_id" ref="model_library_checkout"/>
+    </record>
+
+    <template id="library_checkout_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>Library Checkout Report</h1>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Request Date</th>
+                                        <th>Expected To Return</th>
+                                        <th>Returned On</th>
+                                        <th>Member</th>
+                                        <th>Stage</th>
+                                        <th>Total Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="checkout">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="checkout.name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.request_date"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.want_to_borrow_for_days"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.close_date"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.member_id.name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.stage_id.name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.price_adjusted_after_discount"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="checkout.total_borrowed_books"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
